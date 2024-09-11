@@ -5,7 +5,7 @@ document.getElementById('file-upload').addEventListener('change', function(event
     const formData = new FormData();
     formData.append('file', file);
 
-    fetch('http://127.0.0.1:5000/predict', {
+    fetch('https://rice-vision-ai-powered-grain-classifier-msi3.vercel.app/predict', {
         method: 'POST',
         body: formData,
     })
