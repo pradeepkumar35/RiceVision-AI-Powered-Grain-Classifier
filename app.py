@@ -4,8 +4,6 @@ import pandas as pd
 from PIL import Image
 from tensorflow.keras.models import load_model
 import plotly.express as px
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
 
 # Load the ensemble model
 model = load_model('ensemble_model.h5')
@@ -44,15 +42,19 @@ st.markdown("""
         color: white;
         border-radius: 5px;
     }
+    /* Attractive main font color */
+    .main h1, .main h3, .main p {
+        color: #FF6F61; /* Soft coral color */
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # Title and Description
 st.markdown("""
 <div style="text-align: center;">
-    <h1 style="color: #2C3E50;">RiceVision</h1>
-    <h3 style="color: #34495E;">AI-Powered Rice Grain Classifier</h3>
-    <p style="color: #7D8891;">
+    <h1 style="color: #FF6F61;">RiceVision</h1>
+    <h3 style="color: #FF8F5F;">AI-Powered Rice Grain Classifier</h3>
+    <p style="color: #FF6F61;">
         Upload an image of rice grains, and our advanced AI model will classify it into one of five types: Arborio, Basmati, Ipsala, Jasmine, or Karacadag.
     </p>
 </div>
@@ -61,7 +63,7 @@ st.markdown("""
 # Sidebar
 st.sidebar.title("About RiceVision")
 st.sidebar.info("""
-RiceVision uses a cutting-edge Hybrid model combining CNN and LSTM architectures to classify rice types. 
+RiceVision uses a cutting-edge ensemble model combining CNN and LSTM architectures to classify rice types. 
 Supported types:
 - Arborio
 - Basmati
@@ -81,7 +83,7 @@ if uploaded_files:
     results = []
 
     # Process uploaded files
-    for file in uploaded_files:
+    for idx, file in enumerate(uploaded_files):
         image = Image.open(file)
         st.image(image, caption=f"Uploaded Image: {file.name}", use_container_width=True)
 
@@ -97,7 +99,7 @@ if uploaded_files:
             results.append({'Filename': file.name, 'Predicted Rice Type': rice_name})
 
             # Display Prediction
-            st.markdown(f"<h4 style='color: #2C3E50;'>Prediction: {rice_name}</h4>", unsafe_allow_html=True)
+            st.markdown(f"<h4 style='color: #FF6F61;'>Prediction: {rice_name}</h4>", unsafe_allow_html=True)
             st.markdown("<b>Confidence Scores:</b>", unsafe_allow_html=True)
 
             # Bar Chart for Confidence Levels
@@ -118,7 +120,8 @@ if uploaded_files:
                 yaxis_title="Confidence (%)",
                 showlegend=False
             )
-            st.plotly_chart(fig)
+            # Use a unique key for each chart
+            st.plotly_chart(fig, key=f"chart_{idx}")
 
         except Exception as e:
             st.error(f"Error during prediction: {str(e)}")
@@ -138,17 +141,6 @@ if uploaded_files:
             mime='text/csv',
             help="Click to download the prediction results."
         )
-
-# Optional: Confusion Matrix
-if st.sidebar.checkbox("Show Confusion Matrix (Requires labeled test data)"):
-    # Example test data (replace with actual test data)
-    y_true = [0, 1, 2, 3, 4, 0]  # Replace with true labels
-    y_pred = [0, 1, 1, 3, 4, 0]  # Replace with model predictions
-
-    conf_matrix = confusion_matrix(y_true, y_pred)
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ConfusionMatrixDisplay(conf_matrix, display_labels=list(rice_types.values())).plot(ax=ax, cmap='Blues')
-    st.pyplot(fig)
 
 # Footer
 st.markdown("""
