@@ -61,7 +61,7 @@ st.markdown("""
 # Sidebar
 st.sidebar.title("About RiceVision")
 st.sidebar.info("""
-RiceVision uses a cutting-edge ensemble model combining CNN and LSTM architectures to classify rice types. 
+RiceVision uses a cutting-edge Hybrid model combining CNN and LSTM architectures to classify rice types. 
 Supported types:
 - Arborio
 - Basmati
